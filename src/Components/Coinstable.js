@@ -3,7 +3,7 @@ import axios from "axios";
 import { CoinList } from "../config/api";
 import { CryptoState } from "../CryptoContext";
 import { useNavigate } from "react-router-dom";
-
+import { numberWithCommas } from "./Banner/Carousel";
 import {
   createTheme,
   ThemeProvider,
@@ -25,8 +25,9 @@ const Coinstable = () => {
   const [coins, setCoins] = useState([]);
   const [loading, setloading] = useState(false);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const { currency } = CryptoState();
+  const { currency, symbol } = CryptoState();
 
   const fetchCoins = async () => {
     setloading(true);
@@ -60,7 +61,16 @@ const Coinstable = () => {
     );
   };
 
-  const useStyles = makeStyles(() => {});
+  const useStyles = makeStyles(() => ({
+    row: {
+      backgroundColor: "#E8E8E8	",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: "#F0F0F0	",
+      },
+      fontFamily: "Manrope",
+    },
+  }));
   const classes = useStyles();
 
   return (
@@ -105,23 +115,65 @@ const Coinstable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {handleSearch().map((row) => {
-                  const profit = row.price_chang_percentage_24h > 0;
+                {handleSearch()
+                  .slice((page - 1) * 10, (page - 1) * 10 + 10)
+                  .map((row) => {
+                    const profit = row.price_chang_percentage_24h > 0;
 
-                  return (
-                    <TableRow
-                      onClick={() => navigate.push(`/coins/${row.id}`)}
-                      className={classes.row}
-                      key={row.name}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        styles={{ display: "flex", gap: 15 }}
-                      ></TableCell>
-                    </TableRow>
-                  );
-                })}
+                    return (
+                      <TableRow
+                        onClick={() => navigate.push(`/coins/${row.id}`)}
+                        className={classes.row}
+                        key={row.name}
+                      >
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          style={{ display: "flex", gap: 15 }}
+                        >
+                          <img
+                            src={row?.image}
+                            alt={row.name}
+                            height="25"
+                            style={{ marginBottom: 5 }}
+                          />
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <span
+                              style={{
+                                textTransform: "uppercase",
+                                fontSize: 16,
+                              }}
+                            >
+                              {row.symbol}
+                            </span>
+                            <span style={{ color: "darkgrey" }}>
+                              {row.name}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell align="right">
+                          {symbol}{" "}
+                          {numberWithCommas(row.current_price.toFixed(2))}
+                        </TableCell>
+                        <TableCell
+                          align="right"
+                          style={{
+                            color: profit > 0 ? "rgb(14, 203, 129)" : "red",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {profit && "+"}
+                          {row.price_change_percentage_24h.toFixed(2)}%
+                        </TableCell>
+                        <TableCell align="right">
+                          {symbol}{" "}
+                          {numberWithCommas(row.market_cap.toString().slice(0))}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           )}
