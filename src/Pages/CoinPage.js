@@ -53,6 +53,12 @@ const CoinPage = () => {
       marginBottom: 10,
       fontFamily: "Manrope",
     },
+    data: {
+      color: "black",
+      fontSize: 18,
+      marginBottom: 10,
+      fontFamily: "Manrope",
+    },
     description: {
       color: "black",
       fontFamily: "Manrope",
@@ -61,6 +67,23 @@ const CoinPage = () => {
       padding: 20,
       paddingBottom: 15,
       textAlign: "justify",
+    },
+    marketData: {
+      alignSelf: "start",
+      padding: 25,
+      paddingTop: 10,
+      width: "100%",
+      [theme.breakpoints.down("md")]: {
+        display: "flex",
+        justifyContetn: "space-around",
+      },
+      [theme.breakpoints.down("sm")]: {
+        flexDirection: "column",
+        alignItems: "center",
+      },
+      [theme.breakpoints.down("xs")]: {
+        alignItems: "start",
+      },
     },
   }));
 
@@ -89,7 +112,7 @@ const CoinPage = () => {
               Rank:
             </Typography>
             &nbsp; &nbsp;
-            <Typography variant="h4" className={classes.heading}>
+            <Typography variant="h4" className={classes.data}>
               {coin?.market_cap_rank}
             </Typography>
           </span>
@@ -98,7 +121,7 @@ const CoinPage = () => {
               Current Price:
             </Typography>
             &nbsp; &nbsp;
-            <Typography variant="h4" className={classes.heading}>
+            <Typography variant="h4" className={classes.data}>
               {symbol}
               {numberWithCommas(
                 coin?.market_data.current_price[currency.toLowerCase()]
@@ -107,11 +130,14 @@ const CoinPage = () => {
           </span>
           <span style={{ display: "flex" }}>
             <Typography variant="h4" className={classes.heading}>
-              Rank:
+              Market cap:
             </Typography>
             &nbsp; &nbsp;
-            <Typography variant="h4" className={classes.heading}>
-              {coin?.market_cap_rank}
+            <Typography variant="h4" className={classes.data}>
+              {symbol}{" "}
+              {numberWithCommas(
+                coin?.market_data.market_cap[currency.toLowerCase()].toString()
+              )}
             </Typography>
           </span>
         </div>
