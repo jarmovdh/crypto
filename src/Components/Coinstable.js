@@ -19,47 +19,15 @@ import {
   TableBody,
   makeStyles,
 } from "@material-ui/core";
-import { Classnames } from "react-alice-carousel";
+import { Pagination } from "@material-ui/lab";
 
 const Coinstable = () => {
   const [coins, setCoins] = useState([]);
   const [loading, setloading] = useState(false);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const navigate = useNavigate();
+
   const { currency, symbol } = CryptoState();
-
-  const fetchCoins = async () => {
-    setloading(true);
-
-    const { data } = await axios.get(CoinList(currency));
-
-    setCoins(data);
-    setloading(false);
-  };
-
-  console.log(coins);
-
-  useEffect(() => {
-    fetchCoins();
-  }, [currency]);
-
-  const darkTheme = createTheme({
-    palette: {
-      primary: {
-        main: "#000",
-      },
-      type: "light",
-    },
-  });
-
-  const handleSearch = () => {
-    return coins.filter(
-      (coin) =>
-        coin.name.toLowerCase().includes(search) ||
-        coin.symbol.toLowerCase().includes(search)
-    );
-  };
 
   const useStyles = makeStyles(() => ({
     row: {
@@ -71,7 +39,39 @@ const Coinstable = () => {
       fontFamily: "Manrope",
     },
   }));
+
   const classes = useStyles();
+  const navigate = useNavigate();
+
+  const darkTheme = createTheme({
+    palette: {
+      primary: {
+        main: "#000",
+      },
+      type: "light",
+    },
+  });
+
+  const fetchCoins = async () => {
+    setloading(true);
+
+    const { data } = await axios.get(CoinList(currency));
+
+    setCoins(data);
+    setloading(false);
+  };
+
+  useEffect(() => {
+    fetchCoins();
+  }, [currency]);
+
+  const handleSearch = () => {
+    return coins.filter(
+      (coin) =>
+        coin.name.toLowerCase().includes(search) ||
+        coin.symbol.toLowerCase().includes(search)
+    );
+  };
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -122,7 +122,7 @@ const Coinstable = () => {
 
                     return (
                       <TableRow
-                        onClick={() => navigate.push(`/coins/${row.id}`)}
+                        onClick={() => navigate(`/coins/${row.id}`)}
                         className={classes.row}
                         key={row.name}
                       >
@@ -138,7 +138,10 @@ const Coinstable = () => {
                             style={{ marginBottom: 5 }}
                           />
                           <div
-                            style={{ display: "flex", flexDirection: "column" }}
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                            }}
                           >
                             <span
                               style={{
@@ -178,6 +181,22 @@ const Coinstable = () => {
             </Table>
           )}
         </TableContainer>
+
+        <Pagination
+          variant="outlined"
+          style={{
+            padding: 20,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+          }}
+          classes={{ ul: classes.pagination }}
+          count={(handleSearch()?.length / 10).toFixed(0)}
+          onChange={(_, value) => {
+            setPage(value);
+            window.scroll(0, 450);
+          }}
+        />
       </Container>
     </ThemeProvider>
   );

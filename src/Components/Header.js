@@ -44,7 +44,7 @@ const Header = () => {
         <Container>
           <Toolbar>
             <Typography
-              onClick={() => navigate.push("/")}
+              onClick={() => navigate("/")}
               className={classes.title}
               variant="h6"
             >
