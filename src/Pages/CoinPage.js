@@ -1,10 +1,12 @@
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Typography, LinearProgress } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CoinInfo from "../Components/CoinInfo";
 import { SingleCoin } from "../config/api";
 import { CryptoState } from "../CryptoContext";
+import { numberWithCommas } from "../Components/Banner/Carousel";
+
 import HTMLReactParser from "html-react-parser";
 
 const CoinPage = () => {
@@ -64,6 +66,8 @@ const CoinPage = () => {
 
   const classes = useStyles();
 
+  if (!coin) return <LinearProgress style={{ backGroundColor: "darkgrey" }} />;
+
   return (
     <div className={classes.container}>
       <div className={classes.sidebar}>
@@ -83,6 +87,31 @@ const CoinPage = () => {
           <span style={{ display: "flex" }}>
             <Typography variant="h4" className={classes.heading}>
               Rank:
+            </Typography>
+            &nbsp; &nbsp;
+            <Typography variant="h4" className={classes.heading}>
+              {coin?.market_cap_rank}
+            </Typography>
+          </span>
+          <span style={{ display: "flex" }}>
+            <Typography variant="h4" className={classes.heading}>
+              Current Price:
+            </Typography>
+            &nbsp; &nbsp;
+            <Typography variant="h4" className={classes.heading}>
+              {symbol}
+              {numberWithCommas(
+                coin?.market_data.current_price[currency.toLowerCase()]
+              )}{" "}
+            </Typography>
+          </span>
+          <span style={{ display: "flex" }}>
+            <Typography variant="h4" className={classes.heading}>
+              Rank:
+            </Typography>
+            &nbsp; &nbsp;
+            <Typography variant="h4" className={classes.heading}>
+              {coin?.market_cap_rank}
             </Typography>
           </span>
         </div>
