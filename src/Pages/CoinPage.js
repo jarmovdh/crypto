@@ -7,8 +7,6 @@ import { SingleCoin } from "../config/api";
 import { CryptoState } from "../CryptoContext";
 import { numberWithCommas } from "../Components/Banner/Carousel";
 
-import HTMLReactParser from "html-react-parser";
-
 const CoinPage = () => {
   const { id } = useParams();
   const [coin, setCoin] = useState();
@@ -25,6 +23,7 @@ const CoinPage = () => {
 
   useEffect(() => {
     fetchCoin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const useStyles = makeStyles((theme) => ({
